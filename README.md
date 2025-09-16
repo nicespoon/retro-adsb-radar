@@ -8,8 +8,8 @@ A local ADS-B radar display built with Python and Pygame. Visualises real-time a
 - Real-time radar visualisation of aircraft within a configurable radius
 - Military aircraft detection (aircraft with military hex codes blink red)
 - Tabular display of aircraft data (callsign, altitude, speed, distance, track)
-- CRT scanline overlay and retro color palette
-- Custom Terminus TTF fonts for authentic look
+- CRT scanline overlay and retro colour palette
+- Terminus TTF fonts for an authentic look
 
 ## Quick Start
 
