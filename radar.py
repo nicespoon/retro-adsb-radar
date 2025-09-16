@@ -230,7 +230,7 @@ class DataTable:
         sorted_aircraft = sorted(aircraft_list, key=lambda a: a.distance)
         start_y = headers_y + 38
 
-        for i, aircraft in enumerate(sorted_aircraft[:15]):  # Show up to 15 aircraft
+        for i, aircraft in enumerate(sorted_aircraft[:20]):  # Show up to 20 aircraft
             y_pos = start_y + i * 30
             color = RED if aircraft.is_military else BRIGHT_GREEN
 
