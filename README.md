@@ -2,6 +2,8 @@
 
 A local ADS-B radar display built with Python and Pygame. Visualises real-time aircraft positions and metadata from a local tar1090 server, with a retro CRT-style interface.
 
+![Retro ADS-B Radar Screenshot](screenshot.png)
+
 ## Features
 - Real-time radar visualisation of aircraft within a configurable radius
 - Military aircraft detection (aircraft with military hex codes blink red)
