@@ -1,0 +1,16 @@
+[General]
+FETCH_INTERVAL = 10
+MIL_PREFIX_LIST = 7CF
+TAR1090_URL = http://localhost/data/aircraft.json
+
+[Location]
+LAT = -31.9522
+LON = 115.8614
+AREA_NAME = PERTH
+RADIUS_NM = 60
+
+[Display]
+SCREEN_WIDTH = 1920
+SCREEN_HEIGHT = 1080
+FPS = 6
+FONT_PATH = fonts/TerminusTTF-4.49.3.ttf
