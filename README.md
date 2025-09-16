@@ -25,6 +25,7 @@ A local ADS-B radar display built with Python and Pygame. Visualises real-time a
    ```bash
    python3 radar.py
    ```
+   *Note:* On some systems, `python` may be used instead of `python3` if it points to Python 3.
 5. **Quit:** Press `Q` or `ESC` in the radar window.
 
 ## Configuration
@@ -50,8 +51,9 @@ FONT_PATH = fonts/TerminusTTF-4.49.3.ttf  # Path to TTF font
 ```
 
 - **MIL_PREFIX_LIST**: Accepts a comma-separated list of hex prefixes for military aircraft detection. Example: `MIL_PREFIX_LIST = 7CF,AE,43C` will highlight any aircraft whose hex code starts with one of these prefixes.
+- **SCREEN_WIDTH** and **SCREEN_HEIGHT**: Using values other than the default ones will result in scaling issues with the UI.
 - All configuration values can be overridden in your own `config.ini`.
 
 
 ## License
-See font licenses in `fonts/`. Application code is provided as-is.
+See font licenses in `fonts/`.
