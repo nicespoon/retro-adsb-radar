@@ -25,9 +25,11 @@ LON = config.getfloat('Location', 'LON', fallback=0.0)
 AREA_NAME = config.get('Location', 'AREA_NAME', fallback='UNKNOWN')
 RADIUS_NM = config.getint('Location', 'RADIUS_NM', fallback=60)
 
+STATIC_REDRAW_INTERVAL = config.getint('Performance', 'STATIC_REDRAW_INTERVAL', fallback=5)
+FPS = config.getint('Performance', 'FPS', fallback=6)
+
 SCREEN_WIDTH = config.getint('Display', 'SCREEN_WIDTH', fallback=960)
 SCREEN_HEIGHT = config.getint('Display', 'SCREEN_HEIGHT', fallback=540)
-FPS = config.getint('Display', 'FPS', fallback=6)
 MAX_TABLE_ROWS = config.getint('Display', 'MAX_TABLE_ROWS', fallback=10)
 FONT_PATH = config.get('Display', 'FONT_PATH', fallback='fonts/TerminusTTF-4.49.3.ttf')
 HEADER_FONT_SIZE = config.getint('Display', 'HEADER_FONT_SIZE', fallback=32)
@@ -43,6 +45,26 @@ DIM_GREEN = (0, 180, 0)
 RED = (255, 50, 50)
 YELLOW = (255, 255, 0)
 AMBER = (255, 191, 0)
+
+class TextCache:
+    """Cache for rendered text to avoid repeated font rendering"""
+    def __init__(self):
+        self.cache = {}
+        self._last_clear = time.time()
+    
+    def render(self, font: pygame.font.Font, text: str, color: tuple) -> pygame.Surface:
+        """Render text using cache"""
+        key = (text, color, font.get_height())
+        if key not in self.cache:
+            self.cache[key] = font.render(text, True, color)
+        return self.cache[key]
+    
+    def clear_old(self):
+        """Clear cache every 5 minutes to prevent memory bloat"""
+        now = time.time()
+        if now - self._last_clear > 300:  # 5 minutes
+            self.cache.clear()
+            self._last_clear = now
 
 @dataclass
 class Aircraft:
@@ -119,12 +141,13 @@ def parse_aircraft(data: dict) -> Optional[Aircraft]:
 class RadarScope:
     """Radar display component"""
 
-    def __init__(self, screen: pygame.Surface, center_x: int, center_y: int, radius: int):
+    def __init__(self, screen: pygame.Surface, center_x: int, center_y: int, radius: int, text_cache: TextCache):
         self.screen = screen
         self.center_x = center_x
         self.center_y = center_y
         self.radius = radius
         self.font = load_font(RADAR_FONT_SIZE)
+        self.text_cache = text_cache
 
     def lat_lon_to_screen(self, lat: float, lon: float) -> Optional[Tuple[int, int]]:
         """Convert lat/lon to screen coordinates"""
@@ -159,7 +182,7 @@ class RadarScope:
             pygame.draw.line(self.screen, color, (int(trail_x), int(trail_y)), (x, y), 2)
 
         # Callsign label
-        text = self.font.render(aircraft.callsign, True, color)
+        text = self.text_cache.render(self.font, aircraft.callsign, color)
         self.screen.blit(text, (x + 8, y - 12))
 
     def draw(self, aircraft_list: List[Aircraft]):
@@ -171,7 +194,7 @@ class RadarScope:
 
             # Range labels
             range_nm = int((ring / 3) * RADIUS_NM)
-            text = self.font.render(f"{range_nm}NM", True, DIM_GREEN)
+            text = self.text_cache.render(self.font, f"{range_nm}NM", DIM_GREEN)
             self.screen.blit(text, (self.center_x + ring_radius - 20, self.center_y + 5))
 
         # Crosshairs
@@ -202,12 +225,13 @@ class RadarScope:
 class DataTable:
     """Aircraft data table component"""
 
-    def __init__(self, screen: pygame.Surface, x: int, y: int, width: int, height: int):
+    def __init__(self, screen: pygame.Surface, x: int, y: int, width: int, height: int, text_cache: TextCache):
         self.screen = screen
         self.rect = pygame.Rect(x, y, width, height)
         self.title_font = load_font(TABLE_FONT_SIZE)
         self.data_font = load_font(TABLE_FONT_SIZE)
         self.small_font = load_font(TABLE_FONT_SIZE)
+        self.text_cache = text_cache
 
     def draw(self, aircraft_list: List[Aircraft], status: str, last_update: float):
         """Draw aircraft data table"""
@@ -215,7 +239,7 @@ class DataTable:
         pygame.draw.rect(self.screen, BRIGHT_GREEN, self.rect, 3)
 
         # Title
-        title = self.title_font.render("AIRCRAFT DATA", True, AMBER)
+        title = self.text_cache.render(self.title_font, "AIRCRAFT DATA", AMBER)
         title_rect = title.get_rect(centerx=self.rect.centerx, y=self.rect.y + 12)
         self.screen.blit(title, title_rect)
 
@@ -225,7 +249,7 @@ class DataTable:
         col_width = self.rect.width // 5
 
         for i, header in enumerate(headers):
-            text = self.data_font.render(header, True, AMBER)
+            text = self.text_cache.render(self.data_font, header, AMBER)
             self.screen.blit(text, (self.rect.x + 20 + i * col_width, headers_y))
 
         # Separator line
@@ -252,7 +276,7 @@ class DataTable:
             ]
 
             for j, value in enumerate(columns):
-                text = self.small_font.render(str(value), True, color)
+                text = self.text_cache.render(self.small_font, str(value), color)
                 self.screen.blit(text, (self.rect.x + 20 + j * col_width, y_pos))
 
         # Status information
@@ -272,7 +296,7 @@ class DataTable:
         status_y = self.rect.bottom - 120
         for i, info in enumerate(status_info):
             color = YELLOW if "UPDATING" in info else BRIGHT_GREEN
-            text = self.small_font.render(info, True, color)
+            text = self.text_cache.render(self.small_font, info, color)
             self.screen.blit(text, (self.rect.x + 20, status_y + i * 20))
 
 class AircraftTracker:
@@ -337,22 +361,33 @@ def main():
     pygame.init()
     pygame.mixer.quit()  # Disable all audio to save resources
     screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT), pygame.FULLSCREEN | pygame.SCALED)
-    pygame.display.set_caption("{AREA_NAME} ADS-B RADAR")
+    pygame.display.set_caption(f"{AREA_NAME} ADS-B RADAR")
     clock = pygame.time.Clock()
-
+    frame_count = 0
+    
+    # Initialize text cache
+    text_cache = TextCache()
+    
     # Load fonts
     header_font = load_font(HEADER_FONT_SIZE)
     instruction_font = load_font(INSTRUCTION_FONT_SIZE)
+    title_font = load_font(RADAR_FONT_SIZE)
 
     # Create scanline overlay
     scanlines = create_scanlines(SCREEN_WIDTH, SCREEN_HEIGHT)
 
-    # Create components
+    # Pre-render static text elements
     radar_size = min(SCREEN_HEIGHT - 120, SCREEN_WIDTH // 2 - 50) // 2
-    radar = RadarScope(screen, SCREEN_WIDTH // 4, SCREEN_HEIGHT // 2 + 30, radar_size)
+    static_radar_title = text_cache.render(title_font, "◄ ADS-B RADAR SCOPE ►", AMBER)
+    static_radar_title_rect = static_radar_title.get_rect(centerx=SCREEN_WIDTH//4, y=SCREEN_HEIGHT//2 - radar_size)
+    static_instructions = text_cache.render(instruction_font, "PRESS Q OR ESC TO QUIT", DIM_GREEN)
+    static_instructions_rect = (15, SCREEN_HEIGHT - 30)
+
+    # Create components
+    radar = RadarScope(screen, SCREEN_WIDTH // 4, SCREEN_HEIGHT // 2 + 30, radar_size, text_cache)
 
     table = DataTable(screen, SCREEN_WIDTH // 2 + 20, 80, 
-                     SCREEN_WIDTH // 2 - 30, SCREEN_HEIGHT - 100)
+                     SCREEN_WIDTH // 2 - 30, SCREEN_HEIGHT - 100, text_cache)
 
     # Start aircraft tracker
     tracker = AircraftTracker()
@@ -370,29 +405,27 @@ def main():
         # Clear screen
         screen.fill(BLACK)
 
-        # Header
+        frame_count += 1
+        text_cache.clear_old()
+
+        # Header (updates every frame for time)
         current_time = datetime.now().strftime("%H:%M:%S")
         header_text = f"{AREA_NAME} {LAT}°, {LON}° - {current_time}"
-        header = header_font.render(header_text, True, AMBER)
+        header = text_cache.render(header_font, header_text, AMBER)
         header_rect = header.get_rect(centerx=SCREEN_WIDTH // 2, y=15)
         screen.blit(header, header_rect)
 
-        # Radar title
-        title_font = load_font(RADAR_FONT_SIZE)
-        radar_title = title_font.render("◄ ADS-B RADAR SCOPE ►", True, AMBER)
-        radar_title_rect = radar_title.get_rect(centerx=SCREEN_WIDTH//4, y=SCREEN_HEIGHT//2 - radar_size)
-        screen.blit(radar_title, radar_title_rect)
+        # Static text elements (render every frame)
+        screen.blit(static_radar_title, static_radar_title_rect)
+        screen.blit(static_instructions, static_instructions_rect)
 
         # Components
         radar.draw(tracker.aircraft)
         table.draw(tracker.aircraft, tracker.status, tracker.last_update)
 
-        # Instructions
-        instructions = instruction_font.render("PRESS Q OR ESC TO QUIT", True, DIM_GREEN)
-        screen.blit(instructions, (15, SCREEN_HEIGHT - 30))
-
         # Scanline effect
-        screen.blit(scanlines, (0, 0))
+        if frame_count % STATIC_REDRAW_INTERVAL == 0:
+            screen.blit(scanlines, (0, 0))
 
         pygame.display.flip()
         clock.tick(FPS)
