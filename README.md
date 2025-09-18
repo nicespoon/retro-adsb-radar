@@ -38,6 +38,7 @@ The application is configured via `config.ini` (see `config.ini.example` for a t
 FETCH_INTERVAL = 10                # Data fetch interval (seconds)
 MIL_PREFIX_LIST = 7CF              # Comma-separated list of military aircraft hex prefixes (e.g. 7CF,AE,43C)
 TAR1090_URL = http://localhost/data/aircraft.json  # tar1090 data source URL
+BLINK_MILITARY = true              # Toggle blinking effect for military aircraft (true/false)
 
 [Location]
 LAT = -31.9522                     # Radar center latitude
@@ -46,14 +47,22 @@ AREA_NAME = PERTH                  # Displayed area name
 RADIUS_NM = 60                     # Radar range (nautical miles)
 
 [Display]
-SCREEN_WIDTH = 1920                # Window width (pixels)
-SCREEN_HEIGHT = 1080               # Window height (pixels)
+SCREEN_WIDTH = 960                 # Window width (pixels)
+SCREEN_HEIGHT = 540                # Window height (pixels)
 FPS = 6                            # Frames per second
+MAX_TABLE_ROWS = 10                # Maximum number of aircraft to show in the table
 FONT_PATH = fonts/TerminusTTF-4.49.3.ttf  # Path to TTF font
+HEADER_FONT_SIZE = 32              # Font size for the header text
+RADAR_FONT_SIZE = 22              # Font size for radar labels and callsigns
+TABLE_FONT_SIZE = 22              # Font size for the data table
+INSTRUCTION_FONT_SIZE = 12         # Font size for instruction text
 ```
 
 - **MIL_PREFIX_LIST**: Accepts a comma-separated list of hex prefixes for military aircraft detection. Example: `MIL_PREFIX_LIST = 7CF,AE,43C` will highlight any aircraft whose hex code starts with one of these prefixes.
-- **SCREEN_WIDTH** and **SCREEN_HEIGHT**: Using values other than the default ones will result in scaling issues with the UI.
+- **BLINK_MILITARY**: When set to `true`, military aircraft will blink on the radar. When `false`, they will be shown continuously in red.
+- **MAX_TABLE_ROWS**: Controls how many aircraft are shown in the data table (default: 10).
+- **Font Sizes**: Customize the appearance with `HEADER_FONT_SIZE`, `RADAR_FONT_SIZE`, `TABLE_FONT_SIZE`, and `INSTRUCTION_FONT_SIZE`.
+- **SCREEN_WIDTH** and **SCREEN_HEIGHT**: Default values of 960x540 are recommended for best display.
 - All configuration values can be overridden in your own `config.ini`.
 
 
