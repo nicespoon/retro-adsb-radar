@@ -341,15 +341,10 @@ def main():
     pygame.mouse.set_visible(False)
     clock = pygame.time.Clock()
 
-    # Load fonts and pre-render static text
+    # Load fonts
     header_font = load_font(HEADER_FONT_SIZE)
     instruction_font = load_font(INSTRUCTION_FONT_SIZE)
     
-    # Pre-render static text elements
-    instructions_text = instruction_font.render("PRESS Q OR ESC TO QUIT", True, DIM_GREEN)
-    radar_title_font = load_font(RADAR_FONT_SIZE)
-    radar_title_text = radar_title_font.render("◄ ADS-B RADAR SCOPE ►", True, AMBER)
-
     # Create scanline overlay
     scanlines = create_scanlines(SCREEN_WIDTH, SCREEN_HEIGHT)
 
@@ -383,16 +378,19 @@ def main():
         header_rect = header.get_rect(centerx=SCREEN_WIDTH // 2, y=15)
         screen.blit(header, header_rect)
 
-        # Radar title (using pre-rendered text)
-        radar_title_rect = radar_title_text.get_rect(centerx=SCREEN_WIDTH//4, y=SCREEN_HEIGHT//2 - radar_size)
-        screen.blit(radar_title_text, radar_title_rect)
+        # Radar title
+        title_font = load_font(RADAR_FONT_SIZE)
+        radar_title = title_font.render("◄ ADS-B RADAR SCOPE ►", True, AMBER)
+        radar_title_rect = radar_title.get_rect(centerx=SCREEN_WIDTH//4, y=SCREEN_HEIGHT//2 - radar_size)
+        screen.blit(radar_title, radar_title_rect)
 
         # Components
         radar.draw(tracker.aircraft)
         table.draw(tracker.aircraft, tracker.status, tracker.last_update)
 
-        # Instructions (using pre-rendered text)
-        screen.blit(instructions_text, (15, SCREEN_HEIGHT - 30))
+        # Instructions
+        instructions = instruction_font.render("PRESS Q OR ESC TO QUIT", True, DIM_GREEN)
+        screen.blit(instructions, (15, SCREEN_HEIGHT - 30))
 
         # Scanline effect
         screen.blit(scanlines, (0, 0))
