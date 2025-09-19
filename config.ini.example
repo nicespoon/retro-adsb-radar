@@ -1,7 +1,7 @@
 [General]
 FETCH_INTERVAL = 10
 MIL_PREFIX_LIST = 7CF
-TAR1090_URL = http://localhost/data/aircraft.json
+TAR1090_URL = http://localhost/tar1090/data/aircraft.json
 BLINK_MILITARY = true
 
 [Location]

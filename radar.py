@@ -35,7 +35,7 @@ RADAR_FONT_SIZE = config.getint('Display', 'RADAR_FONT_SIZE', fallback=22)
 TABLE_FONT_SIZE = config.getint('Display', 'TABLE_FONT_SIZE', fallback=22)
 INSTRUCTION_FONT_SIZE = config.getint('Display', 'INSTRUCTION_FONT_SIZE', fallback=12)
 
-# Colors
+# Colours
 BLACK = (0, 0, 0)
 GREEN = (0, 255, 0)
 BRIGHT_GREEN = (50, 255, 50)
@@ -142,10 +142,10 @@ class RadarScope:
             return int(x), int(y)
         return None
 
-    def draw_aircraft(self, aircraft: Aircraft, x: int, y: int, color: tuple):
+    def draw_aircraft(self, aircraft: Aircraft, x: int, y: int, colour: tuple):
         """Draw aircraft symbol with direction indicator"""
         # Main aircraft dot
-        pygame.draw.circle(self.screen, color, (x, y), 5, 0)
+        pygame.draw.circle(self.screen, colour, (x, y), 5, 0)
 
         # Direction arrow if we have track data
         if aircraft.track > 0:
@@ -156,10 +156,10 @@ class RadarScope:
             trail_length = 12
             trail_x = x - trail_length * math.sin(track_rad)
             trail_y = y + trail_length * math.cos(track_rad)
-            pygame.draw.line(self.screen, color, (int(trail_x), int(trail_y)), (x, y), 2)
+            pygame.draw.line(self.screen, colour, (int(trail_x), int(trail_y)), (x, y), 2)
 
         # Callsign label
-        text = self.font.render(aircraft.callsign, True, color)
+        text = self.font.render(aircraft.callsign, True, colour)
         self.screen.blit(text, (x + 8, y - 12))
 
     def draw(self, aircraft_list: List[Aircraft]):
@@ -237,10 +237,9 @@ class DataTable:
         sorted_aircraft = sorted(aircraft_list, key=lambda a: a.distance)
         start_y = headers_y + 30
 
-        MAX_TABLE_ROWS = config.getint('Display', 'MAX_TABLE_ROWS', fallback=20)
         for i, aircraft in enumerate(sorted_aircraft[:MAX_TABLE_ROWS]):  # Show up to MAX_TABLE_ROWS aircraft
             y_pos = start_y + i * 22
-            color = RED if aircraft.is_military else BRIGHT_GREEN
+            colour = RED if aircraft.is_military else BRIGHT_GREEN
 
             # Format data columns
             columns = [
@@ -252,7 +251,7 @@ class DataTable:
             ]
 
             for j, value in enumerate(columns):
-                text = self.small_font.render(str(value), True, color)
+                text = self.small_font.render(str(value), True, colour)
                 self.screen.blit(text, (self.rect.x + 20 + j * col_width, y_pos))
 
         # Status information
@@ -271,8 +270,8 @@ class DataTable:
 
         status_y = self.rect.bottom - 120
         for i, info in enumerate(status_info):
-            color = YELLOW if "UPDATING" in info else BRIGHT_GREEN
-            text = self.small_font.render(info, True, color)
+            colour = YELLOW if "UPDATING" in info else BRIGHT_GREEN
+            text = self.small_font.render(info, True, colour)
             self.screen.blit(text, (self.rect.x + 20, status_y + i * 20))
 
 class AircraftTracker:
