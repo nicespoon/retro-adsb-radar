@@ -244,7 +244,7 @@ class DataTable:
             # Format data columns
             columns = [
                 f"{aircraft.callsign:<8}",
-                f"{aircraft.altitude:>5}" if isinstance(aircraft.altitude, int) and aircraft.altitude > 0 else "GND",
+                f"{aircraft.altitude:>5}" if isinstance(aircraft.altitude, int) and aircraft.altitude > 0 else "  N/A",
                 f"{aircraft.speed:>3}" if aircraft.speed > 0 else "N/A",
                 f"{aircraft.distance:>4.1f}" if aircraft.distance > 0 else "N/A ",
                 f"{aircraft.track:03.0f}°" if aircraft.track > 0 else "N/A"
@@ -349,7 +349,7 @@ def main():
 
     # Create components
     radar_size = min(SCREEN_HEIGHT - 120, SCREEN_WIDTH // 2 - 50) // 2
-    radar = RadarScope(screen, SCREEN_WIDTH // 4, SCREEN_HEIGHT // 2 + 30, radar_size)
+    radar = RadarScope(screen, SCREEN_WIDTH // 4, SCREEN_HEIGHT // 2 + 35, radar_size)
 
     table = DataTable(screen, SCREEN_WIDTH // 2 + 20, 80, 
                      SCREEN_WIDTH // 2 - 30, SCREEN_HEIGHT - 100)
