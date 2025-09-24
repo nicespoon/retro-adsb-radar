@@ -221,7 +221,7 @@ class DataTable:
 
         # Column headers
         headers_y = self.rect.y + 40
-        headers = ["CALL", "   ALT", "SPD", "DIST", "HDG"]
+        headers = ["CALLSIGN", "   ALT", "SPD", "DIST", "HDG"]
         
         # Calculate column widths based on content
         total_width = self.rect.width - 40  # Account for padding
