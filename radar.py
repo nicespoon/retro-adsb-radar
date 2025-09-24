@@ -230,15 +230,15 @@ class DataTable:
 
         # Separator line
         pygame.draw.line(self.screen, DIM_GREEN,
-                        (self.rect.x + 8, headers_y + 22),
-                        (self.rect.right - 8, headers_y + 22), 2)
+                        (self.rect.x + 8, headers_y + TABLE_FONT_SIZE),
+                        (self.rect.right - 8, headers_y + TABLE_FONT_SIZE), 2)
 
         # Aircraft data rows
         sorted_aircraft = sorted(aircraft_list, key=lambda a: a.distance)
         start_y = headers_y + 30
 
         for i, aircraft in enumerate(sorted_aircraft[:MAX_TABLE_ROWS]):  # Show up to MAX_TABLE_ROWS aircraft
-            y_pos = start_y + i * 22
+            y_pos = start_y + i * TABLE_FONT_SIZE
             colour = RED if aircraft.is_military else BRIGHT_GREEN
 
             # Format data columns
@@ -268,11 +268,11 @@ class DataTable:
             f"NEXT UPDATE: {countdown_text}"
         ]
 
-        status_y = self.rect.bottom - 120
+        status_y = self.rect.bottom - 5 * TABLE_FONT_SIZE - 10
         for i, info in enumerate(status_info):
             colour = YELLOW if "UPDATING" in info else BRIGHT_GREEN
             text = self.small_font.render(info, True, colour)
-            self.screen.blit(text, (self.rect.x + 20, status_y + i * 20))
+            self.screen.blit(text, (self.rect.x + 20, status_y + i * TABLE_FONT_SIZE))
 
 class AircraftTracker:
     """Handles fetching aircraft data from tar1090"""
