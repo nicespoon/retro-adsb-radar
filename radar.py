@@ -216,17 +216,25 @@ class DataTable:
 
         # Title
         title = self.title_font.render("AIRCRAFT DATA", True, AMBER)
-        title_rect = title.get_rect(centerx=self.rect.centerx, y=self.rect.y + 12)
+        title_rect = title.get_rect(centerx=self.rect.centerx, y=self.rect.y + 10)
         self.screen.blit(title, title_rect)
 
         # Column headers
         headers_y = self.rect.y + 40
-        headers = ["CALL", "ALT", "SPD", "DIST", "HDG"]
-        col_width = self.rect.width // 5
-
-        for i, header in enumerate(headers):
-            text = self.data_font.render(header, True, AMBER)
-            self.screen.blit(text, (self.rect.x + 20 + i * col_width, headers_y))
+        headers = ["CALL", "   ALT", "SPD", "DIST", "HDG"]
+        
+        # Calculate column widths based on content
+        total_width = self.rect.width - 40  # Account for padding
+        col_widths = [0.25, 0.25, 0.15, 0.2, 0.15]  # Proportions of total width
+        col_positions = []
+        current_x = self.rect.x + 20
+        
+        for i, width_ratio in enumerate(col_widths):
+            width = int(total_width * width_ratio)
+            col_positions.append(current_x)
+            text = self.data_font.render(headers[i], True, AMBER)
+            self.screen.blit(text, (current_x, headers_y))
+            current_x += width
 
         # Separator line
         pygame.draw.line(self.screen, DIM_GREEN,
@@ -244,15 +252,15 @@ class DataTable:
             # Format data columns
             columns = [
                 f"{aircraft.callsign:<8}",
-                f"{aircraft.altitude:>5}" if isinstance(aircraft.altitude, int) and aircraft.altitude > 0 else "  N/A",
+                f"{aircraft.altitude:>6}" if isinstance(aircraft.altitude, int) and aircraft.altitude > 0 else "  N/A",
                 f"{aircraft.speed:>3}" if aircraft.speed > 0 else "N/A",
                 f"{aircraft.distance:>4.1f}" if aircraft.distance > 0 else "N/A ",
-                f"{aircraft.track:03.0f}°" if aircraft.track > 0 else "N/A"
+                f"{aircraft.track:>3.0f}°" if aircraft.track > 0 else "N/A"
             ]
 
             for j, value in enumerate(columns):
                 text = self.small_font.render(str(value), True, colour)
-                self.screen.blit(text, (self.rect.x + 20 + j * col_width, y_pos))
+                self.screen.blit(text, (col_positions[j], y_pos))
 
         # Status information
         military_count = sum(1 for a in aircraft_list if a.is_military)
