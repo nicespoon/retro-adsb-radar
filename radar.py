@@ -332,13 +332,6 @@ class AircraftTracker:
         thread = threading.Thread(target=self.update_loop, daemon=True)
         thread.start()
 
-def create_scanlines(width: int, height: int) -> pygame.Surface:
-    """Create CRT-style scanline overlay"""
-    surface = pygame.Surface((width, height), pygame.SRCALPHA)
-    for y in range(0, height, 4):
-        pygame.draw.line(surface, (0, 0, 0, 30), (0, y), (width, y))
-    return surface
-
 def main():
     """Main application loop"""
     pygame.init()
@@ -356,9 +349,6 @@ def main():
     header_font = load_font(HEADER_FONT_SIZE)
     instruction_font = load_font(INSTRUCTION_FONT_SIZE)
     
-    # Create scanline overlay
-    scanlines = create_scanlines(SCREEN_WIDTH, SCREEN_HEIGHT)
-
     # Create components
     radar_size = min(SCREEN_HEIGHT - 120, SCREEN_WIDTH // 2 - 50) // 2
     radar = RadarScope(screen, SCREEN_WIDTH // 4, SCREEN_HEIGHT // 2 + 35, radar_size)
@@ -423,9 +413,6 @@ def main():
             pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_ARROW)
 
         screen.blit(instructions, instructions_rect)
-
-        # Scanline effect
-        screen.blit(scanlines, (0, 0))
 
         pygame.display.flip()
         clock.tick(FPS)
