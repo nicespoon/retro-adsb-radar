@@ -345,8 +345,12 @@ def main():
     pygame.mixer.quit()  # Disable all audio to save resources
     screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT), pygame.FULLSCREEN | pygame.SCALED)
     pygame.display.set_caption(f"{AREA_NAME} ADS-B RADAR")
-    pygame.mouse.set_visible(False)
     clock = pygame.time.Clock()
+    
+    # Mouse visibility control
+    last_mouse_move = time.time()
+    MOUSE_HIDE_DELAY = 3.0  # Hide cursor after 3 seconds of inactivity
+    pygame.mouse.set_visible(True)
 
     # Load fonts
     header_font = load_font(HEADER_FONT_SIZE)
@@ -374,6 +378,13 @@ def main():
                 event.type == pygame.KEYDOWN and event.key in (pygame.K_q, pygame.K_ESCAPE)
             ):
                 running = False
+            elif event.type in (pygame.MOUSEMOTION, pygame.MOUSEBUTTONDOWN, pygame.MOUSEBUTTONUP):
+                last_mouse_move = time.time()
+                pygame.mouse.set_visible(True)
+
+        # Handle mouse cursor visibility
+        if time.time() - last_mouse_move > MOUSE_HIDE_DELAY:
+            pygame.mouse.set_visible(False)
 
         # Clear screen
         screen.fill(BLACK)
@@ -395,9 +406,23 @@ def main():
         radar.draw(tracker.aircraft)
         table.draw(tracker.aircraft, tracker.status, tracker.last_update)
 
-        # Instructions
-        instructions = instruction_font.render("PRESS Q OR ESC TO QUIT", True, DIM_GREEN)
-        screen.blit(instructions, (15, SCREEN_HEIGHT - 30))
+        # Instructions with clickable area
+        instructions_text = "PRESS Q OR ESC TO QUIT"
+        instructions = instruction_font.render(instructions_text, True, DIM_GREEN)
+        instructions_rect = instructions.get_rect(x=15, y=SCREEN_HEIGHT - 30)
+
+        # Change colour and cursor on hover
+        mouse_pos = pygame.mouse.get_pos()
+        if instructions_rect.collidepoint(mouse_pos):
+            pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_HAND)
+            instructions = instruction_font.render(instructions_text, True, BRIGHT_GREEN)
+            if any(pygame.mouse.get_pressed()):
+                running = False
+        else:
+            # Reset to default cursor when not hovering
+            pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_ARROW)
+
+        screen.blit(instructions, instructions_rect)
 
         # Scanline effect
         screen.blit(scanlines, (0, 0))
