@@ -26,7 +26,7 @@ AREA_NAME = config.get('Location', 'AREA_NAME', fallback='UNKNOWN')
 RADIUS_NM = config.getint('Location', 'RADIUS_NM', fallback=60)
 
 SCREEN_WIDTH = config.getint('Display', 'SCREEN_WIDTH', fallback=960)
-SCREEN_HEIGHT = config.getint('Display', 'SCREEN_HEIGHT', fallback=540)
+SCREEN_HEIGHT = config.getint('Display', 'SCREEN_HEIGHT', fallback=640)
 FPS = config.getint('Display', 'FPS', fallback=6)
 MAX_TABLE_ROWS = config.getint('Display', 'MAX_TABLE_ROWS', fallback=10)
 FONT_PATH = config.get('Display', 'FONT_PATH', fallback='fonts/TerminusTTF-4.49.3.ttf')
