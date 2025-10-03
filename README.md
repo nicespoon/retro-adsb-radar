@@ -55,6 +55,7 @@ SCREEN_HEIGHT = 540                # Window height (pixels)
 FPS = 6                            # Frames per second
 MAX_TABLE_ROWS = 10                # Maximum number of aircraft to show in the table
 FONT_PATH = fonts/TerminusTTF-4.49.3.ttf  # Path to TTF font
+BACKGROUND_PATH =                  # Optional path to background image
 HEADER_FONT_SIZE = 32              # Font size for the header text
 RADAR_FONT_SIZE = 22              # Font size for radar labels and callsigns
 TABLE_FONT_SIZE = 22              # Font size for the data table
@@ -71,6 +72,7 @@ INSTRUCTION_FONT_SIZE = 12         # Font size for instruction text
   - `SCREEN_WIDTH` and `SCREEN_HEIGHT`: Default 960x540 recommended for best display.
   - Font sizes can be adjusted individually with `HEADER_FONT_SIZE`, `RADAR_FONT_SIZE`, `TABLE_FONT_SIZE`, and `INSTRUCTION_FONT_SIZE`.
   - `MAX_TABLE_ROWS`: Controls how many aircraft are shown in the data table.
+  - `BACKGROUND_PATH`: Optional path to a background image. The image will be scaled to match the display resolution.
 
 - **Data Source**
   - `TAR1090_URL`: URL of your tar1090 instance. Default is `http://localhost/tar1090/data/aircraft.json`.

@@ -30,6 +30,7 @@ SCREEN_HEIGHT = config.getint('Display', 'SCREEN_HEIGHT', fallback=540)
 FPS = config.getint('Display', 'FPS', fallback=6)
 MAX_TABLE_ROWS = config.getint('Display', 'MAX_TABLE_ROWS', fallback=10)
 FONT_PATH = config.get('Display', 'FONT_PATH', fallback='fonts/TerminusTTF-4.49.3.ttf')
+BACKGROUND_PATH = config.get('Display', 'BACKGROUND_PATH', fallback=None)
 HEADER_FONT_SIZE = config.getint('Display', 'HEADER_FONT_SIZE', fallback=32)
 RADAR_FONT_SIZE = config.getint('Display', 'RADAR_FONT_SIZE', fallback=22)
 TABLE_FONT_SIZE = config.getint('Display', 'TABLE_FONT_SIZE', fallback=22)
@@ -332,6 +333,18 @@ class AircraftTracker:
         thread = threading.Thread(target=self.update_loop, daemon=True)
         thread.start()
 
+def load_background(path: str) -> Optional[pygame.Surface]:
+    """Load and scale background image if it exists"""
+    try:
+        bg = pygame.image.load(path)
+        if bg.get_size() != (SCREEN_WIDTH, SCREEN_HEIGHT):
+            print(f"Warning: Background image size {bg.get_size()} doesn't match display resolution {SCREEN_WIDTH}x{SCREEN_HEIGHT}")
+            bg = pygame.transform.scale(bg, (SCREEN_WIDTH, SCREEN_HEIGHT))
+        return bg
+    except (pygame.error, FileNotFoundError) as e:
+        print(f"Warning: Couldn't load background image: {e}")
+        return None
+
 def main():
     """Main application loop"""
     pygame.init()
@@ -339,6 +352,9 @@ def main():
     screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT), pygame.FULLSCREEN | pygame.SCALED)
     pygame.display.set_caption(f"{AREA_NAME} ADS-B RADAR")
     clock = pygame.time.Clock()
+
+    # Load background if configured
+    background = load_background(BACKGROUND_PATH) if BACKGROUND_PATH else None
     
     # Mouse visibility control
     last_mouse_move = time.time()
@@ -377,7 +393,10 @@ def main():
             pygame.mouse.set_visible(False)
 
         # Clear screen
-        screen.fill(BLACK)
+        if background:
+            screen.blit(background, (0, 0))
+        else:
+            screen.fill(BLACK)
 
         # Header
         current_time = datetime.now().strftime("%H:%M:%S")
