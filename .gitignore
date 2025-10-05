@@ -3,4 +3,4 @@ __pycache__/
 *.pyc
 .DS_Store
 config.ini
-images/
+images/background.png

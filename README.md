@@ -2,7 +2,7 @@
 
 Aircraft radar display built with Python and Pygame. Visualises real-time aircraft positions and metadata from a local tar1090 server, with a retro interface.
 
-![Retro ADS-B Radar Screenshot](screenshot.png)
+![Retro ADS-B Radar Screenshot](images/screenshot.png)
 
 ## Features
 - Real-time radar visualisation of aircraft within a configurable radius
@@ -13,7 +13,7 @@ Aircraft radar display built with Python and Pygame. Visualises real-time aircra
 - Terminus TTF fonts for an authentic look
 - Default configuration is compatible with the [Hagibis Mini PC USB-C Hub](https://hagibis.com/products-p00288p1.html)
 
-![Retro ADS-B Radar Running on Hagibis Mini PC USB-C Hub](hagibis_display.jpg)
+![Retro ADS-B Radar Running on Hagibis Mini PC USB-C Hub](images/hagibis_display.jpg)
 
 ## Quick Start
 
