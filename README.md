@@ -1,6 +1,6 @@
 # Retro ADS-B Radar ✈
 
-Aircraft radar display built with Python and Pygame. Visualises real-time aircraft positions and metadata from a local tar1090 server, with a retro CRT-style interface.
+Aircraft radar display built with Python and Pygame. Visualises real-time aircraft positions and metadata from a local tar1090 server, with a retro interface.
 
 ![Retro ADS-B Radar Screenshot](screenshot.png)
 
@@ -9,7 +9,7 @@ Aircraft radar display built with Python and Pygame. Visualises real-time aircra
 - Military aircraft detection with configurable hex code prefixes and blinking effect
 - Configurable font sizes and display settings
 - Tabular display of aircraft data (callsign, altitude, speed, distance, track)
-- CRT scanline overlay and retro colour palette
+- Retro colour palette
 - Terminus TTF fonts for an authentic look
 
 ## Quick Start
@@ -51,7 +51,7 @@ RADIUS_NM = 60                     # Radar range (nautical miles)
 
 [Display]
 SCREEN_WIDTH = 960                 # Window width (pixels)
-SCREEN_HEIGHT = 540                # Window height (pixels)
+SCREEN_HEIGHT = 640                # Window height (pixels)
 FPS = 6                            # Frames per second
 MAX_TABLE_ROWS = 10                # Maximum number of aircraft to show in the table
 FONT_PATH = fonts/TerminusTTF-4.49.3.ttf  # Path to TTF font
