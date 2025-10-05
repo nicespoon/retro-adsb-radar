@@ -15,7 +15,7 @@ Aircraft radar display built with Python and Pygame. Visualises real-time aircra
 
 ![Retro ADS-B Radar Running on Hagibis Mini PC USB-C Hub](hagibis_display.jpg)
 
-### Quick Start
+## Quick Start
 
 1. **Hardware setup:**
    - Connect your ADS-B USB dongle (e.g. RTL-SDR) to a Raspberry Pi or similar single-board computer.
