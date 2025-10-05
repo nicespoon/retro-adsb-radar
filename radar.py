@@ -314,13 +314,12 @@ class AircraftTracker:
 
     def update_loop(self):
         """Background thread to fetch data periodically"""
-        def update_loop(self):
-            while self.running:
-                self.status = "SCANNING"
-                self.last_update = time.time()
-                self.aircraft = self.fetch_data()
-                self.status = "ACTIVE" if self.aircraft else "NO CONTACTS"
-                time.sleep(FETCH_INTERVAL)
+        while self.running:
+            self.status = "SCANNING"
+            self.last_update = time.time()
+            self.aircraft = self.fetch_data()
+            self.status = "ACTIVE" if self.aircraft else "NO CONTACTS"
+            time.sleep(FETCH_INTERVAL)
 
     def start(self):
         """Start the background data fetching"""
