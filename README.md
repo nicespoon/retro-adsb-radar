@@ -26,7 +26,7 @@ Aircraft radar display built with Python and Pygame. Visualises real-time aircra
 2. **Software setup:**
    - Clone the repository:
      ```
-     git clone https://github.com/nicespono/retro-adsb-radar.git
+     git clone https://github.com/nicespoon/retro-adsb-radar.git
      cd retro-adsb-radar
      ```
    - Install dependencies:
