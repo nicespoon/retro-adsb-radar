@@ -11,6 +11,7 @@ Aircraft radar display built with Python and Pygame. Visualises real-time aircra
 - Tabular display of aircraft data (callsign, altitude, speed, distance, track)
 - Retro colour palette
 - Terminus TTF fonts for an authentic look
+- Default configuration is compatible with the [Hagibis Mini PC USB-C Hub](https://hagibis.com/products-p00288p1.html)
 
 ## Quick Start
 
@@ -69,7 +70,7 @@ INSTRUCTION_FONT_SIZE = 12         # Font size for instruction text
   - `BLINK_MILITARY`: Set to `false` to show military aircraft in solid red without blinking.
 
 - **Display Customization**
-  - `SCREEN_WIDTH` and `SCREEN_HEIGHT`: Default 960x540 recommended for best display.
+  - `SCREEN_WIDTH` and `SCREEN_HEIGHT`: Default 960x640 recommended for best display.
   - Font sizes can be adjusted individually with `HEADER_FONT_SIZE`, `RADAR_FONT_SIZE`, `TABLE_FONT_SIZE`, and `INSTRUCTION_FONT_SIZE`.
   - `MAX_TABLE_ROWS`: Controls how many aircraft are shown in the data table.
   - `BACKGROUND_PATH`: Optional path to a background image. The image will be scaled to match the display resolution.
