@@ -413,16 +413,12 @@ def main():
         instructions = instruction_font.render(instructions_text, True, DIM_GREEN)
         instructions_rect = instructions.get_rect(x=15, y=SCREEN_HEIGHT - 30)
 
-        # Change colour and cursor on hover
+        # Change colour on hover
         mouse_pos = pygame.mouse.get_pos()
         if instructions_rect.collidepoint(mouse_pos):
-            pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_HAND)
             instructions = instruction_font.render(instructions_text, True, BRIGHT_GREEN)
             if any(pygame.mouse.get_pressed()):
                 running = False
-        else:
-            # Reset to default cursor when not hovering
-            pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_ARROW)
 
         screen.blit(instructions, instructions_rect)
 
