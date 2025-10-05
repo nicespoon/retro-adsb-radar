@@ -224,9 +224,9 @@ class DataTable:
         headers_y = self.rect.y + 40
         headers = ["CALLSIGN", "   ALT", "SPD", "DIST", "TRK"]
         
-        # Calculate column widths based on content
-        total_width = self.rect.width - 40  # Account for padding
-        col_widths = [0.25, 0.25, 0.15, 0.2, 0.15]  # Proportions of total width
+        # Column widths and positions
+        total_width = self.rect.width - 40
+        col_widths = [0.25, 0.25, 0.15, 0.2, 0.15]
         col_positions = []
         current_x = self.rect.x + 20
         
@@ -314,19 +314,13 @@ class AircraftTracker:
 
     def update_loop(self):
         """Background thread to fetch data periodically"""
-        while self.running:
-            self.status = "SCANNING"
-            self.last_update = time.time()
-
-            aircraft = self.fetch_data()
-
-            if aircraft:
-                self.aircraft = aircraft
-                self.status = "ACTIVE"
-            else:
-                self.status = "NO CONTACTS"
-
-            time.sleep(FETCH_INTERVAL)
+        def update_loop(self):
+            while self.running:
+                self.status = "SCANNING"
+                self.last_update = time.time()
+                self.aircraft = self.fetch_data()
+                self.status = "ACTIVE" if self.aircraft else "NO CONTACTS"
+                time.sleep(FETCH_INTERVAL)
 
     def start(self):
         """Start the background data fetching"""
