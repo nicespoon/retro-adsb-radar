@@ -13,25 +13,36 @@ Aircraft radar display built with Python and Pygame. Visualises real-time aircra
 - Terminus TTF fonts for an authentic look
 - Default configuration is compatible with the [Hagibis Mini PC USB-C Hub](https://hagibis.com/products-p00288p1.html)
 
-## Quick Start
+![Retro ADS-B Radar Running on Hagibis Mini PC USB-C Hub](hagibis_display.jpg)
 
-1. **Clone the repository:**
-   ```bash
-   git clone https://github.com/nicespoon/retro-adsb-radar.git
-   cd retro-adsb-radar
-   ```
-2. **Install dependencies:**
-   ```bash
-   pip install -r requirements.txt
-   ```
-3. **Configure the application:**
-   - Copy `config.ini.example` to `config.ini`
-   - Edit `config.ini` with your settings (see Configuration section)
-4. **Run the radar UI:**
+### Quick Start
+
+1. **Hardware setup:**
+   - Connect your ADS-B USB dongle (e.g. RTL-SDR) to a Raspberry Pi or similar single-board computer.
+   - Attach a suitable 1090 MHz antenna to the dongle.
+   - Ensure the dongle is running software that provides ADS-B data in JSON format, such as [tar1090](https://github.com/wiedehopf/tar1090).
+   - Connect your Raspberry Pi to your display, such as the Hagibis Mini PC USB-C Hub, with an HDMI cable.
+
+2. **Software setup:**
+   - Clone the repository:
+     ```
+     git clone https://github.com/nicespono/retro-adsb-radar.git
+     cd retro-adsb-radar
+     ```
+   - Install dependencies:
+     ```
+     pip install -r requirements.txt
+     ```
+   - Configure the application:
+     - Copy `config.ini.example` to `config.ini`.
+     - Edit `config.ini` to set the `TAR1090URL` to your tar1090 data source URL (default: `http://localhost/data/aircraft.json`).
+     - Adjust location and display settings as needed.
+
+3. **Run the radar UI:**
    ```bash
    python3 radar.py
    ```
-   *Note:* On some systems, `python` may be used instead of `python3` if it points to Python 3.
+   *Note:* On some systems, you may need to use `python` instead of `python3`.
 5. **Quit:** Press `Q` or `ESC` in the radar window.
 
 ## Configuration
@@ -80,4 +91,6 @@ INSTRUCTION_FONT_SIZE = 12         # Font size for instruction text
   - `FETCH_INTERVAL`: How often to update aircraft data (in seconds).
 
 ## License
-See font licenses in `fonts/`.
+- The project code is licensed under the MIT License (see `LICENSE`).
+- Fonts used in this project are licensed under the SIL Open Font License Version 1.1.  
+  See font license files in the `fonts/` directory for details.
