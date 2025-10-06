@@ -71,7 +71,7 @@ BACKGROUND_PATH =                  # Optional path to background image
 HEADER_FONT_SIZE = 32              # Font size for the header text
 RADAR_FONT_SIZE = 22              # Font size for radar labels and callsigns
 TABLE_FONT_SIZE = 22              # Font size for the data table
-INSTRUCTION_FONT_SIZE = 12         # Font size for instruction text
+INSTRUCTION_FONT_SIZE = 12         # Font size for instruction text`
 ```
 
 ### Key Configuration Options
@@ -90,7 +90,40 @@ INSTRUCTION_FONT_SIZE = 12         # Font size for instruction text
   - `TAR1090_URL`: URL of your tar1090 instance. Default is `http://localhost/tar1090/data/aircraft.json`.
   - `FETCH_INTERVAL`: How often to update aircraft data (in seconds).
 
+## Pygame SDL Dependency Check and Troubleshooting
+
+Pygame relies on several SDL subsystems, including:
+
+- Video subsystem (`libsdl2`)
+- Font rendering (`libsdl2-ttf`)
+- Image loading (`libsdl2-image`)
+
+The availability of these modules is checked at startup. If dependencies are  installed on your system, the output will be:
+
+```
+🔍 Checking Pygame module support...
+✅ Video: Supported
+✅ Font: Supported
+✅ Image: Supported
+```
+
+If modules are missing, the output will look like this:
+
+```
+❌ Video: Not available - install libsdl2-2.0-0
+❌ Font: Not available - install libsdl2-ttf-2.0-0
+❌ Image: Not available - install libsdl2-image-2.0-0
+```
+
+### How to Fix Missing Dependencies
+
+If you see errors indicating missing dependencies, you can install the required system packages using the following command:
+
+```
+sudo apt update
+sudo apt install libsdl2-2.0-0 libsdl2-ttf-2.0-0 libsdl2-image-2.0-0
+```
+
 ## License
 - The project code is licensed under the MIT License (see `LICENSE`).
-- Fonts used in this project are licensed under the SIL Open Font License Version 1.1.  
-  See font license files in the `fonts/` directory for details.
+- Fonts used in this project are licensed under the SIL Open Font License Version 1.1. See font license files in the `fonts/` directory for details.

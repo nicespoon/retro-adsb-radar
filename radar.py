@@ -59,6 +59,41 @@ class Aircraft:
     bearing: float
     is_military: bool = False
 
+def check_pygame_modules():
+    """Verify essential Pygame modules are available due to SDL dependencies."""
+   
+    print("🔍 Checking Pygame module support...")
+    
+    # Video (SDL_video)
+    if pygame.display.get_init():
+        print("✅ Video: Supported")
+    else:
+        print("❌ Video: Not available - install libsdl2-2.0-0")
+    
+    # Font (SDL_ttf)
+    if pygame.font.get_init():
+        print("✅ Font: Supported")
+    else:
+        print("❌ Font: Not available - install libsdl2-ttf-2.0-0")
+    
+    # Image (SDL_image)
+    if pygame.image.get_extended():
+        print("✅ Image: Supported")
+    else:
+        print("❌ Image: Not available - install libsdl2-image-2.0-0")
+
+def load_background(path: str) -> Optional[pygame.Surface]:
+    """Load and scale background image if it exists"""
+    try:
+        bg = pygame.image.load(path)
+        if bg.get_size() != (SCREEN_WIDTH, SCREEN_HEIGHT):
+            print(f"Warning: Background image size {bg.get_size()} doesn't match display resolution {SCREEN_WIDTH}x{SCREEN_HEIGHT}")
+            bg = pygame.transform.scale(bg, (SCREEN_WIDTH, SCREEN_HEIGHT))
+        return bg
+    except (pygame.error, FileNotFoundError) as e:
+        print(f"Warning: Couldn't load background image: {e}")
+        return None
+
 def load_font(size: int) -> pygame.font.Font:
     """Load Terminus font with fallback to default pygame font"""
     try:
@@ -326,22 +361,13 @@ class AircraftTracker:
         thread = threading.Thread(target=self.update_loop, daemon=True)
         thread.start()
 
-def load_background(path: str) -> Optional[pygame.Surface]:
-    """Load and scale background image if it exists"""
-    try:
-        bg = pygame.image.load(path)
-        if bg.get_size() != (SCREEN_WIDTH, SCREEN_HEIGHT):
-            print(f"Warning: Background image size {bg.get_size()} doesn't match display resolution {SCREEN_WIDTH}x{SCREEN_HEIGHT}")
-            bg = pygame.transform.scale(bg, (SCREEN_WIDTH, SCREEN_HEIGHT))
-        return bg
-    except (pygame.error, FileNotFoundError) as e:
-        print(f"Warning: Couldn't load background image: {e}")
-        return None
-
 def main():
     """Main application loop"""
-    pygame.init()
-    pygame.mixer.quit()  # Disable all audio to save resources
+    pygame.display.init()
+    pygame.font.init()
+
+    check_pygame_modules()
+
     screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT), pygame.FULLSCREEN | pygame.SCALED)
     pygame.display.set_caption(f"{AREA_NAME} ADS-B RADAR")
     clock = pygame.time.Clock()
@@ -351,7 +377,7 @@ def main():
     
     # Mouse visibility control
     last_mouse_move = time.time()
-    MOUSE_HIDE_DELAY = 3.0  # Hide cursor after 3 seconds of inactivity
+    MOUSE_HIDE_DELAY = 3.0
     pygame.mouse.set_visible(True)
 
     # Load fonts
