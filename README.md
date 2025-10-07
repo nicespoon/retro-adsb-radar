@@ -2,8 +2,6 @@
 
 Aircraft radar display built with Python and Pygame. Visualises real-time aircraft positions and metadata from a local tar1090 server, with a retro interface.
 
-![Retro ADS-B Radar Screenshot](images/screenshot.png)
-
 ## Features
 - Real-time radar visualisation of aircraft within a configurable radius
 - Military aircraft detection with configurable hex code prefixes and blinking effect
@@ -12,6 +10,8 @@ Aircraft radar display built with Python and Pygame. Visualises real-time aircra
 - Retro colour palette
 - Terminus TTF fonts for an authentic look
 - Default configuration is compatible with the [Hagibis Mini PC USB-C Hub](https://hagibis.com/products-p00288p1.html)
+
+![Retro ADS-B Radar Screenshot](images/screenshot.png)
 
 ![Retro ADS-B Radar Running on Hagibis Mini PC USB-C Hub](images/hagibis_display.jpg)
 
@@ -35,7 +35,7 @@ Aircraft radar display built with Python and Pygame. Visualises real-time aircra
      ```
    - Configure the application:
      - Copy `config.ini.example` to `config.ini`.
-     - Edit `config.ini` to set the `TAR1090URL` to your tar1090 data source URL (default: `http://localhost/data/aircraft.json`).
+     - Edit `config.ini` to set the `TAR1090URL` to your tar1090 data source URL (default: `http://localhost/tar1090/data/aircraft.json`).
      - Adjust location and display settings as needed.
 
 3. **Run the radar UI:**
@@ -73,22 +73,6 @@ RADAR_FONT_SIZE = 22              # Font size for radar labels and callsigns
 TABLE_FONT_SIZE = 22              # Font size for the data table
 INSTRUCTION_FONT_SIZE = 12         # Font size for instruction text`
 ```
-
-### Key Configuration Options
-
-- **Military Aircraft Detection**
-  - `MIL_PREFIX_LIST`: Comma-separated list of hex code prefixes. Example: `7CF,AE,43C` will highlight aircraft whose hex codes start with any of these prefixes.
-  - `BLINK_MILITARY`: Set to `false` to show military aircraft in solid red without blinking.
-
-- **Display Customization**
-  - `SCREEN_WIDTH` and `SCREEN_HEIGHT`: Default 960x640 recommended for best display.
-  - Font sizes can be adjusted individually with `HEADER_FONT_SIZE`, `RADAR_FONT_SIZE`, `TABLE_FONT_SIZE`, and `INSTRUCTION_FONT_SIZE`.
-  - `MAX_TABLE_ROWS`: Controls how many aircraft are shown in the data table.
-  - `BACKGROUND_PATH`: Optional path to a background image. The image will be scaled to match the display resolution.
-
-- **Data Source**
-  - `TAR1090_URL`: URL of your tar1090 instance. Default is `http://localhost/tar1090/data/aircraft.json`.
-  - `FETCH_INTERVAL`: How often to update aircraft data (in seconds).
 
 ## Pygame SDL Dependency Check and Troubleshooting
 
