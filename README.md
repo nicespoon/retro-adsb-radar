@@ -69,9 +69,9 @@ MAX_TABLE_ROWS = 10                # Maximum number of aircraft to show in the t
 FONT_PATH = fonts/TerminusTTF-4.49.3.ttf  # Path to TTF font
 BACKGROUND_PATH =                  # Optional path to background image
 HEADER_FONT_SIZE = 32              # Font size for the header text
-RADAR_FONT_SIZE = 22              # Font size for radar labels and callsigns
-TABLE_FONT_SIZE = 22              # Font size for the data table
-INSTRUCTION_FONT_SIZE = 12         # Font size for instruction text`
+RADAR_FONT_SIZE = 22               # Font size for radar labels and callsigns
+TABLE_FONT_SIZE = 22               # Font size for the data table
+INSTRUCTION_FONT_SIZE = 12         # Font size for instruction text
 ```
 
 ## Pygame SDL Dependency Check and Troubleshooting
