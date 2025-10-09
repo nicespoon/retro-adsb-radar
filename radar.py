@@ -45,6 +45,9 @@ RED = (255, 50, 50)
 YELLOW = (255, 255, 0)
 AMBER = (255, 191, 0)
 
+# Font cache
+_font_cache = {}
+
 @dataclass
 class Aircraft:
     """Aircraft data from tar1090"""
@@ -59,10 +62,29 @@ class Aircraft:
     bearing: float
     is_military: bool = False
 
+def calculate_distance_bearing(lat1: float, lon1: float, lat2: float, lon2: float) -> Tuple[float, float]:
+    """Calculate distance in nautical miles and bearing in degrees using Haversine formula"""
+    # Convert to radians
+    lat1_rad, lon1_rad = math.radians(lat1), math.radians(lon1)
+    lat2_rad, lon2_rad = math.radians(lat2), math.radians(lon2)
+
+    # Distance calculation
+    dlat = lat2_rad - lat1_rad
+    dlon = lon2_rad - lon1_rad
+    a = math.sin(dlat/2)**2 + math.cos(lat1_rad) * math.cos(lat2_rad) * math.sin(dlon/2)**2
+    distance_km = 2 * math.asin(math.sqrt(a)) * 6371  # Earth radius = 6371km
+    distance_nm = distance_km * 0.539957  # Convert to nautical miles
+
+    # Bearing calculation
+    y = math.sin(dlon) * math.cos(lat2_rad)
+    x = math.cos(lat1_rad) * math.sin(lat2_rad) - math.sin(lat1_rad) * math.cos(lat2_rad) * math.cos(dlon)
+    bearing = (math.degrees(math.atan2(y, x)) + 360) % 360
+
+    return distance_nm, bearing
+
 def check_pygame_modules():
     """Verify essential Pygame modules are available due to SDL dependencies."""
-   
-    print("🔍 Checking Pygame module support...")
+    print("\nChecking Pygame module support...")
     
     # Video (SDL_video)
     if pygame.display.get_init():
@@ -85,41 +107,31 @@ def check_pygame_modules():
 def load_background(path: str) -> Optional[pygame.Surface]:
     """Load and scale background image if it exists"""
     try:
+        print(f"\nLoading background image from {path}...")
         bg = pygame.image.load(path)
+        print("✅ Background image loaded successfully")
         if bg.get_size() != (SCREEN_WIDTH, SCREEN_HEIGHT):
-            print(f"Warning: Background image size {bg.get_size()} doesn't match display resolution {SCREEN_WIDTH}x{SCREEN_HEIGHT}")
+            print(f"❌ Warning: Background image size {bg.get_size()} doesn't match display resolution {SCREEN_WIDTH}x{SCREEN_HEIGHT}")
             bg = pygame.transform.scale(bg, (SCREEN_WIDTH, SCREEN_HEIGHT))
         return bg
     except (pygame.error, FileNotFoundError) as e:
-        print(f"Warning: Couldn't load background image: {e}")
+        print(f"❌ Warning: Couldn't load background image: {e}")
         return None
 
 def load_font(size: int) -> pygame.font.Font:
-    """Load Terminus font with fallback to default pygame font"""
+    """Load font with fallback to default pygame font"""
+    if size in _font_cache:
+        return _font_cache[size]
+        
     try:
-        return pygame.font.Font(FONT_PATH, size)
+        font = pygame.font.Font(FONT_PATH, size)
+        print(f"✅ Loaded font {FONT_PATH} at size {size}")
     except (pygame.error, FileNotFoundError):
-        return pygame.font.Font(None, size)
-
-def calculate_distance_bearing(lat1: float, lon1: float, lat2: float, lon2: float) -> Tuple[float, float]:
-    """Calculate distance in nautical miles and bearing in degrees using Haversine formula"""
-    # Convert to radians
-    lat1_rad, lon1_rad = math.radians(lat1), math.radians(lon1)
-    lat2_rad, lon2_rad = math.radians(lat2), math.radians(lon2)
-
-    # Distance calculation
-    dlat = lat2_rad - lat1_rad
-    dlon = lon2_rad - lon1_rad
-    a = math.sin(dlat/2)**2 + math.cos(lat1_rad) * math.cos(lat2_rad) * math.sin(dlon/2)**2
-    distance_km = 2 * math.asin(math.sqrt(a)) * 6371  # Earth radius = 6371km
-    distance_nm = distance_km * 0.539957  # Convert to nautical miles
-
-    # Bearing calculation
-    y = math.sin(dlon) * math.cos(lat2_rad)
-    x = math.cos(lat1_rad) * math.sin(lat2_rad) - math.sin(lat1_rad) * math.cos(lat2_rad) * math.cos(dlon)
-    bearing = (math.degrees(math.atan2(y, x)) + 360) % 360
-
-    return distance_nm, bearing
+        print(f"❌ Warning: Could not load {FONT_PATH}, falling back to default font")
+        font = pygame.font.Font(None, size)
+    
+    _font_cache[size] = font
+    return font
 
 def parse_aircraft(data: dict) -> Optional[Aircraft]:
     """Parse tar1090 aircraft data into Aircraft object"""
@@ -160,7 +172,7 @@ class RadarScope:
         self.center_x = center_x
         self.center_y = center_y
         self.radius = radius
-        self.font = load_font(RADAR_FONT_SIZE)
+        self.font = _font_cache[RADAR_FONT_SIZE]
 
     def lat_lon_to_screen(self, lat: float, lon: float) -> Optional[Tuple[int, int]]:
         """Convert lat/lon to screen coordinates"""
@@ -241,9 +253,7 @@ class DataTable:
     def __init__(self, screen: pygame.Surface, x: int, y: int, width: int, height: int):
         self.screen = screen
         self.rect = pygame.Rect(x, y, width, height)
-        self.title_font = load_font(TABLE_FONT_SIZE)
-        self.data_font = load_font(TABLE_FONT_SIZE)
-        self.small_font = load_font(TABLE_FONT_SIZE)
+        self.font = _font_cache[TABLE_FONT_SIZE]
 
     def draw(self, aircraft_list: List[Aircraft], status: str, last_update: float):
         """Draw aircraft data table"""
@@ -251,7 +261,7 @@ class DataTable:
         pygame.draw.rect(self.screen, BRIGHT_GREEN, self.rect, 3)
 
         # Title
-        title = self.title_font.render("AIRCRAFT DATA", True, AMBER)
+        title = self.font.render("AIRCRAFT DATA", True, AMBER)
         title_rect = title.get_rect(centerx=self.rect.centerx, y=self.rect.y + 10)
         self.screen.blit(title, title_rect)
 
@@ -268,7 +278,7 @@ class DataTable:
         for i, width_ratio in enumerate(col_widths):
             width = int(total_width * width_ratio)
             col_positions.append(current_x)
-            text = self.data_font.render(headers[i], True, AMBER)
+            text = self.font.render(headers[i], True, AMBER)
             self.screen.blit(text, (current_x, headers_y))
             current_x += width
 
@@ -295,7 +305,7 @@ class DataTable:
             ]
 
             for j, value in enumerate(columns):
-                text = self.small_font.render(str(value), True, colour)
+                text = self.font.render(str(value), True, colour)
                 self.screen.blit(text, (col_positions[j], y_pos))
 
         # Status information
@@ -315,7 +325,7 @@ class DataTable:
         status_y = self.rect.bottom - 5 * TABLE_FONT_SIZE - 10
         for i, info in enumerate(status_info):
             colour = YELLOW if "UPDATING" in info else BRIGHT_GREEN
-            text = self.small_font.render(info, True, colour)
+            text = self.font.render(info, True, colour)
             self.screen.blit(text, (self.rect.x + 20, status_y + i * TABLE_FONT_SIZE))
 
 class AircraftTracker:
@@ -330,6 +340,7 @@ class AircraftTracker:
     def fetch_data(self) -> List[Aircraft]:
         """Fetch aircraft from local tar1090"""
         try:
+            print(f"\nFetching aircraft data from {TAR1090_URL}...")
             response = requests.get(TAR1090_URL, timeout=10)
             response.raise_for_status()
 
@@ -341,10 +352,11 @@ class AircraftTracker:
                 if aircraft:
                     aircraft_list.append(aircraft)
 
+            print(f"✅ Found {len(aircraft_list)} aircraft within {RADIUS_NM}NM range")
             return aircraft_list
 
         except requests.RequestException as e:
-            print(f"Error fetching data: {e}")
+            print(f"❌ Error: Couldn't fetch aircraft data: {e}")
             return []
 
     def update_loop(self):
@@ -363,11 +375,24 @@ class AircraftTracker:
 
 def main():
     """Main application loop"""
+    print("\nStarting Retro ADS-B Radar...")
+    print(f"📍 Location: {AREA_NAME} ({LAT}°, {LON}°)")
+    print(f"📡 Range: {RADIUS_NM} NM")
+    print(f"🖥️ Display: {SCREEN_WIDTH}x{SCREEN_HEIGHT} at {FPS} FPS")
+
+    # Initialise Pygame
     pygame.display.init()
     pygame.font.init()
-
     check_pygame_modules()
 
+    # Preload all required fonts
+    print("\nPreloading fonts...")
+    load_font(HEADER_FONT_SIZE)
+    load_font(RADAR_FONT_SIZE)
+    load_font(TABLE_FONT_SIZE)
+    load_font(INSTRUCTION_FONT_SIZE)
+
+    # Set up display
     screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT), pygame.FULLSCREEN | pygame.SCALED)
     pygame.display.set_caption(f"{AREA_NAME} ADS-B RADAR")
     clock = pygame.time.Clock()
@@ -380,10 +405,6 @@ def main():
     MOUSE_HIDE_DELAY = 3.0
     pygame.mouse.set_visible(True)
 
-    # Load fonts
-    header_font = load_font(HEADER_FONT_SIZE)
-    instruction_font = load_font(INSTRUCTION_FONT_SIZE)
-    
     # Create components
     radar_size = min(SCREEN_HEIGHT - 120, SCREEN_WIDTH // 2 - 50) // 2
     radar = RadarScope(screen, SCREEN_WIDTH // 4, SCREEN_HEIGHT // 2 + 35, radar_size)
@@ -420,13 +441,12 @@ def main():
         # Header
         current_time = datetime.now().strftime("%H:%M:%S")
         header_text = f"{AREA_NAME} {LAT}°, {LON}° - {current_time}"
-        header = header_font.render(header_text, True, AMBER)
+        header = _font_cache[HEADER_FONT_SIZE].render(header_text, True, AMBER)
         header_rect = header.get_rect(centerx=SCREEN_WIDTH // 2, y=15)
         screen.blit(header, header_rect)
 
         # Radar title
-        title_font = load_font(RADAR_FONT_SIZE)
-        radar_title = title_font.render("◄ ADS-B RADAR SCOPE ►", True, AMBER)
+        radar_title = radar.font.render("◄ ADS-B RADAR SCOPE ►", True, AMBER)
         radar_title_rect = radar_title.get_rect(centerx=SCREEN_WIDTH//4, y=SCREEN_HEIGHT//2 - radar_size)
         screen.blit(radar_title, radar_title_rect)
 
@@ -436,13 +456,13 @@ def main():
 
         # Instructions with clickable area
         instructions_text = "PRESS Q OR ESC TO QUIT"
-        instructions = instruction_font.render(instructions_text, True, DIM_GREEN)
+        instructions = _font_cache[INSTRUCTION_FONT_SIZE].render(instructions_text, True, DIM_GREEN)
         instructions_rect = instructions.get_rect(x=15, y=SCREEN_HEIGHT - 30)
 
         # Change colour on hover
         mouse_pos = pygame.mouse.get_pos()
         if instructions_rect.collidepoint(mouse_pos):
-            instructions = instruction_font.render(instructions_text, True, BRIGHT_GREEN)
+            instructions = _font_cache[INSTRUCTION_FONT_SIZE].render(instructions_text, True, BRIGHT_GREEN)
             if any(pygame.mouse.get_pressed()):
                 running = False
 

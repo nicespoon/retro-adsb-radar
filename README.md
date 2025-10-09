@@ -1,6 +1,6 @@
 # Retro ADS-B Radar ✈
 
-Aircraft radar display built with Python and Pygame. Visualises real-time aircraft positions and metadata from a local tar1090 server, with a retro interface.
+Aircraft radar display built with Python and Pygame. Visualises real-time aircraft positions and metadata from a tar1090 server, with a retro interface.
 
 ## Features
 - Real-time radar visualisation of aircraft within a configurable radius
@@ -17,33 +17,39 @@ Aircraft radar display built with Python and Pygame. Visualises real-time aircra
 
 ## Quick Start
 
-1. **Hardware setup:**
-   - Connect your ADS-B USB dongle (e.g. RTL-SDR) to a Raspberry Pi or similar single-board computer.
-   - Attach a suitable 1090 MHz antenna to the dongle.
-   - Ensure the dongle is running software that provides ADS-B data in JSON format, such as [tar1090](https://github.com/wiedehopf/tar1090).
-   - Connect your Raspberry Pi to your display, such as the Hagibis Mini PC USB-C Hub, with an HDMI cable.
+### Hardware Setup
+- Connect your ADS-B USB dongle (e.g. RTL-SDR) to a Raspberry Pi or similar single-board computer.
+- Attach a suitable 1090 MHz antenna to the dongle.
+- Ensure the dongle is running software that provides ADS-B data in JSON format, such as [tar1090](https://github.com/wiedehopf/tar1090).
+- Connect your Raspberry Pi to your display, such as the Hagibis Mini PC USB-C Hub, with an HDMI cable.
 
-2. **Software setup:**
-   - Clone the repository:
-     ```
-     git clone https://github.com/nicespoon/retro-adsb-radar.git
-     cd retro-adsb-radar
-     ```
-   - Install dependencies:
-     ```
-     pip install -r requirements.txt
-     ```
-   - Configure the application:
-     - Copy `config.ini.example` to `config.ini`.
-     - Edit `config.ini` to set the `TAR1090URL` to your tar1090 data source URL (default: `http://localhost/tar1090/data/aircraft.json`).
-     - Adjust location and display settings as needed.
+### Software Setup
+Clone the repository:
+  ```
+  git clone https://github.com/nicespoon/retro-adsb-radar.git
+  cd retro-adsb-radar
+  ```
+Create and activate a virtual environment:
+```
+python3 -m venv venv
+source venv/bin/activate
+```
 
-3. **Run the radar UI:**
-   ```bash
-   python3 radar.py
-   ```
-   *Note:* On some systems, you may need to use `python` instead of `python3`.
-5. **Quit:** Press `Q` or `ESC` in the radar window.
+Install dependencies:
+  ```
+  pip install -r requirements.txt
+  ```
+Configure the application:
+  - Copy `config.ini.example` to `config.ini`.
+  - Edit `config.ini` to set the `TAR1090URL` to your tar1090 data source URL (default: `http://localhost/tar1090/data/aircraft.json`).
+  - Adjust location and display settings as needed.
+
+### Run the Radar UI
+```bash
+python3 radar.py
+```
+
+To quit, press `Q` or `ESC` in the radar window.
 
 ## Configuration
 The application is configured via `config.ini`. Copy `config.ini.example` to `config.ini` and adjust as needed:
