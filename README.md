@@ -91,7 +91,7 @@ Pygame relies on several SDL subsystems, including:
 The availability of these modules is checked at startup. If dependencies are  installed on your system, the output will be:
 
 ```
-🔍 Checking Pygame module support...
+Checking Pygame module support...
 ✅ Video: Supported
 ✅ Font: Supported
 ✅ Image: Supported
@@ -100,6 +100,7 @@ The availability of these modules is checked at startup. If dependencies are  in
 If modules are missing, the output will look like this:
 
 ```
+Checking Pygame module support...
 ❌ Video: Not available - install libsdl2-2.0-0
 ❌ Font: Not available - install libsdl2-ttf-2.0-0
 ❌ Image: Not available - install libsdl2-image-2.0-0
