@@ -1,5 +1,6 @@
 import configparser
 import math
+import os
 import sys
 import threading
 import time
@@ -12,7 +13,9 @@ import requests
 
 # Read configuration
 config = configparser.ConfigParser()
-config.read('config.ini')
+script_dir = os.path.dirname(os.path.abspath(__file__))
+config_path = os.path.join(script_dir, "config.ini")
+config.read(config_path)
 
 # Import config values from config.ini with defaults
 FETCH_INTERVAL = config.getint('General', 'FETCH_INTERVAL', fallback=10)
