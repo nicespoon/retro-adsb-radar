@@ -122,7 +122,7 @@ class DataTable:
             f"STATUS: {status}",
             f"CONTACTS: {len(aircraft_list)} ({military_count} MIL)",
             f"RANGE: {config.RADIUS_NM}NM",
-            f"BINTERVAL: {config.FETCH_INTERVAL}S",
+            f"REFRESH: {config.FETCH_INTERVAL}S",
             # f"NEXT UPDATE: {countdown_text}"
         ]
         status_y = self.rect.bottom - 5 * config.TABLE_FONT_SIZE - 10
