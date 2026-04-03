@@ -117,13 +117,13 @@ class DataTable:
         military_count = sum(1 for a in aircraft_list if a.is_military)
         elapsed = time.time() - last_update
         countdown = max(0, config.FETCH_INTERVAL - elapsed)
-        countdown_text = f"{int(countdown):02d}S" if countdown > 0 else "UPDATING"
+        # countdown_text = f"{int(countdown):02d}S" if countdown > 0 else "UPDATING"
         status_info = [
             f"STATUS: {status}",
             f"CONTACTS: {len(aircraft_list)} ({military_count} MIL)",
             f"RANGE: {config.RADIUS_NM}NM",
             f"INTERVAL: {config.FETCH_INTERVAL}S",
-            f"NEXT UPDATE: {countdown_text}"
+            # f"NEXT UPDATE: {countdown_text}"
         ]
         status_y = self.rect.bottom - 5 * config.TABLE_FONT_SIZE - 10
         for i, info in enumerate(status_info):
