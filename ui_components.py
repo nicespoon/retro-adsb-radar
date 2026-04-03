@@ -82,10 +82,12 @@ class DataTable:
         self.screen.blit(title, title_rect)
 
         headers_y = self.rect.y + 40
-        headers = ["CALLSIGN", "   ALT", "SPD", "TYPE", "TRK"]
+        headers = ["CALLSIGN", "TYPE", "  ALT", "SPD", "TRK"]
+        # headers = ["CALLSIGN", "   ALT", "SPD", "TYPE", "TRK"]
         # headers = ["CALLSIGN", "   ALT", "SPD", "DIST", "TRK"]
         total_width = self.rect.width - 40
-        col_widths = [0.25, 0.25, 0.15, 0.2, 0.15]
+        col_widths = [0.30, 0.20, 0.20, 0.15, 0.15]
+        # col_widths = [0.25, 0.25, 0.15, 0.2, 0.15]        
         col_positions = []
         current_x = self.rect.x + 20
         for i, width_ratio in enumerate(col_widths):
@@ -103,10 +105,12 @@ class DataTable:
             y_pos = start_y + i * config.TABLE_FONT_SIZE
             colour = config.RED if aircraft.is_military else config.BRIGHT_GREEN
             columns = [
-                f"{aircraft.callsign:<8}",
-                f"{aircraft.altitude:>6}" if isinstance(aircraft.altitude, int) and aircraft.altitude > 0 else "   N/A",
-                f"{aircraft.speed:>3}" if aircraft.speed > 0 else "N/A",
+                f"{aircraft.callsign:<7}",
                 f"{(aircraft.type or 'N/A'):<4}",
+                f"{aircraft.altitude:>5}" if isinstance(aircraft.altitude, int) and aircraft.altitude > 0 else "  N/A",
+                # f"{aircraft.altitude:>5}" if isinstance(aircraft.altitude, int) and aircraft.altitude > 0 else "   N/A",
+                f"{aircraft.speed:>3}" if aircraft.speed > 0 else "N/A",
+                # f"{(aircraft.type or 'N/A'):<4}",
                 # f"{aircraft.distance:>4.1f}" if aircraft.distance > 0 else "N/A ",
                 f"{aircraft.track:>3.0f}°" if aircraft.track > 0 else "N/A"
             ]
