@@ -107,7 +107,7 @@ class DataTable:
             columns = [
                 f"{aircraft.callsign:<7}",
                 f"{(aircraft.type or 'N/A'):<4}",
-                f"{aircraft.altitude:>5}" if isinstance(aircraft.altitude, int) and aircraft.altitude > 0 else "  N/A",
+                f"{aircraft.altitude:>5}" if isinstance(aircraft.altitude, int) and aircraft.altitude > 0 else "  GND",
                 # f"{aircraft.altitude:>5}" if isinstance(aircraft.altitude, int) and aircraft.altitude > 0 else "   N/A",
                 f"{aircraft.speed:>3}" if aircraft.speed > 0 else "N/A",
                 # f"{(aircraft.type or 'N/A'):<4}",

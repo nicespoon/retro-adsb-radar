@@ -30,6 +30,9 @@ class Aircraft:
         distance, bearing = calculate_distance_bearing(config.LAT, config.LON, lat, lon)
         if distance > config.RADIUS_NM:
             return None
+        speed = int(data.get('gs', 0) or 0)
+        if speed < 15:
+            return None 
         hex_code = data['hex'].lower()
         mil_prefixes = tuple(prefix.lower() for prefix in config.MIL_PREFIX_LIST)
         is_military = hex_code.startswith(mil_prefixes)
@@ -38,7 +41,8 @@ class Aircraft:
             callsign=data.get('flight', 'UNKNOWN').strip()[:8],
             lat=lat, lon=lon,
             altitude=data.get('alt_baro', 0) or 0,
-            speed=int(data.get('gs', 0) or 0),
+            speed=speed,
+            # speed=int(data.get('gs', 0) or 0),
             track=data.get('track', 0) or 0,
             type=data.get('t'),
             distance=distance, bearing=bearing,
