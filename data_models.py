@@ -18,6 +18,7 @@ class Aircraft:
     track: float
     distance: float
     bearing: float
+    type: str
     is_military: bool = False
 
     @staticmethod
@@ -39,6 +40,7 @@ class Aircraft:
             altitude=data.get('alt_baro', 0) or 0,
             speed=int(data.get('gs', 0) or 0),
             track=data.get('track', 0) or 0,
+            type=data.get('t'),
             distance=distance, bearing=bearing,
             is_military=is_military
         )
