@@ -5,7 +5,7 @@ os.environ.setdefault("SDL_AUDIODRIVER", "dummy")
 import pygame
 import sys
 import time
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import Optional
 
 import config
@@ -72,7 +72,8 @@ def main():
 
         # Header
         current_time = datetime.now().strftime("%H:%M:%S")
-        header_text = f"{config.AREA_NAME} {config.LAT}°, {config.LON}° - {current_time}"
+        zulu_time = datetime.now(timezone.utc).strftime("%H:%M:%S")
+        header_text = f"{config.AREA_NAME} - {config.LAT}°,{config.LON}° - {current_time}L / {zulu_time}Z"
         header = font_cache['header'].render(header_text, True, config.AMBER)
         header_rect = header.get_rect(centerx=config.SCREEN_WIDTH // 2, y=15)
         screen.blit(header, header_rect)
