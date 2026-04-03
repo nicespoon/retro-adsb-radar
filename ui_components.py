@@ -125,7 +125,7 @@ class DataTable:
             f"REFRESH: {config.FETCH_INTERVAL}S",
             # f"NEXT UPDATE: {countdown_text}"
         ]
-        status_y = self.rect.bottom - 6 * config.TABLE_FONT_SIZE - 10
+        status_y = self.rect.bottom - 7 * config.TABLE_FONT_SIZE - 10
         for i, info in enumerate(status_info):
             colour = config.YELLOW if "UPDATING" in info else config.BRIGHT_GREEN
             text = self.font.render(info, True, colour)
