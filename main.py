@@ -19,7 +19,7 @@ def main():
     print("\nStarting Retro ADS-B Radar...")
     print(f"📍 Location: {config.AREA_NAME} ({config.LAT}°, {config.LON}°)")
     print(f"📡 Range: {config.RADIUS_NM} NM")
-    print(f"🖥️ Display: {config.SCREEN_WIDTH}x{config.SCREEN_HEIGHT} at {config.FPS} FPS")
+    print(f"🖥️  Display: {config.SCREEN_WIDTH}x{config.SCREEN_HEIGHT} at {config.FPS} FPS")
 
     # Initialisation
     pygame.display.init()
@@ -87,7 +87,8 @@ def main():
         table.draw(tracker.aircraft, tracker.status, tracker.last_update)
 
         # Instructions with clickable areas (centered under radar scope)
-        quit_text = "Q/ESC: QUIT"
+        #quit_text = "Q/ESC: QUIT"
+        quit_text = ""
         audio_text = f"A: ATC [{'ON' if audio.is_playing() else 'OFF'}]" if audio and audio.initialised else ""
 
         # Combine both texts with spacing
