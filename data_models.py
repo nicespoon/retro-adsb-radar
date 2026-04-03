@@ -40,7 +40,7 @@ class Aircraft:
             altitude=data.get('alt_baro', 0) or 0,
             speed=int(data.get('gs', 0) or 0),
             track=data.get('track', 0) or 0,
-            type=data.get('t')
+            type=data.get('t'),
             bearing=bearing,
             # distance=distance, bearing=bearing,
             is_military=is_military
