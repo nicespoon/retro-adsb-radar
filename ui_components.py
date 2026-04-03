@@ -106,7 +106,7 @@ class DataTable:
                 f"{aircraft.callsign:<8}",
                 f"{aircraft.altitude:>6}" if isinstance(aircraft.altitude, int) and aircraft.altitude > 0 else "   N/A",
                 f"{aircraft.speed:>3}" if aircraft.speed > 0 else "N/A",
-                f"{(aircraft.type or 'N/A'):<8}"
+                f"{(aircraft.type or 'N/A'):<6}"
                 # f"{aircraft.distance:>4.1f}" if aircraft.distance > 0 else "N/A ",
                 f"{aircraft.track:>3.0f}°" if aircraft.track > 0 else "N/A"
             ]
@@ -117,15 +117,15 @@ class DataTable:
         military_count = sum(1 for a in aircraft_list if a.is_military)
         elapsed = time.time() - last_update
         countdown = max(0, config.FETCH_INTERVAL - elapsed)
-        countdown_text = f"{int(countdown):02d}S" if countdown > 0 else "UPDATING"
+        # countdown_text = f"{int(countdown):02d}S" if countdown > 0 else "UPDATING"
         status_info = [
             f"STATUS: {status}",
             f"CONTACTS: {len(aircraft_list)} ({military_count} MIL)",
             f"RANGE: {config.RADIUS_NM}NM",
-            f"INTERVAL: {config.FETCH_INTERVAL}S",
-            f"NEXT UPDATE: {countdown_text}"
+            f"REFRESH: {config.FETCH_INTERVAL}S",
+            # f"NEXT UPDATE: {countdown_text}"
         ]
-        status_y = self.rect.bottom - 5 * config.TABLE_FONT_SIZE - 10
+        status_y = self.rect.bottom - 4 * config.TABLE_FONT_SIZE - 10
         for i, info in enumerate(status_info):
             colour = config.YELLOW if "UPDATING" in info else config.BRIGHT_GREEN
             text = self.font.render(info, True, colour)
