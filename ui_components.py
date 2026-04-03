@@ -82,7 +82,8 @@ class DataTable:
         self.screen.blit(title, title_rect)
 
         headers_y = self.rect.y + 40
-        headers = ["CALLSIGN", "   ALT", "SPD", "DIST", "TRK"]
+        headers = ["CALLSIGN", "   ALT", "SPD", "TYPE", "TRK"]
+        # headers = ["CALLSIGN", "   ALT", "SPD", "DIST", "TRK"]
         total_width = self.rect.width - 40
         col_widths = [0.25, 0.25, 0.15, 0.2, 0.15]
         col_positions = []
@@ -105,7 +106,8 @@ class DataTable:
                 f"{aircraft.callsign:<8}",
                 f"{aircraft.altitude:>6}" if isinstance(aircraft.altitude, int) and aircraft.altitude > 0 else "   N/A",
                 f"{aircraft.speed:>3}" if aircraft.speed > 0 else "N/A",
-                f"{aircraft.distance:>4.1f}" if aircraft.distance > 0 else "N/A ",
+                f"{aircraft.type:<8}",
+                # f"{aircraft.distance:>4.1f}" if aircraft.distance > 0 else "N/A ",
                 f"{aircraft.track:>3.0f}°" if aircraft.track > 0 else "N/A"
             ]
             for j, value in enumerate(columns):
