@@ -106,7 +106,7 @@ class DataTable:
                 f"{aircraft.callsign:<8}",
                 f"{aircraft.altitude:>6}" if isinstance(aircraft.altitude, int) and aircraft.altitude > 0 else "   N/A",
                 f"{aircraft.speed:>3}" if aircraft.speed > 0 else "N/A",
-                f"{(aircraft.type or 'N/A'):<5}"
+                f"{(aircraft.type or 'N/A'):<6}"
                 # f"{aircraft.distance:>4.1f}" if aircraft.distance > 0 else "N/A ",
                 f"{aircraft.track:>3.0f}°" if aircraft.track > 0 else "N/A"
             ]
