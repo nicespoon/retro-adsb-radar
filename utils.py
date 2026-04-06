@@ -23,22 +23,22 @@ def check_pygame_modules():
     """Verify essential Pygame modules are available"""
     print("\nChecking Pygame module support...")
     pygame.init()
-    print(f"✅ Video: {'Supported' if pygame.display.get_init() else '❌ Not available - install libsdl2-2.0-0'}")
-    print(f"✅ Font: {'Supported' if pygame.font.get_init() else '❌ Not available - install libsdl2-ttf-2.0-0'}")
-    print(f"✅ Image: {'Supported' if pygame.image.get_extended() else '❌ Not available - install libsdl2-image-2.0-0'}")
+    print(f"Video: {'Supported' if pygame.display.get_init() else '❌ Not available - install libsdl2-2.0-0'}")
+    print(f"Font: {'Supported' if pygame.font.get_init() else '❌ Not available - install libsdl2-ttf-2.0-0'}")
+    print(f"Image: {'Supported' if pygame.image.get_extended() else '❌ Not available - install libsdl2-image-2.0-0'}")
 
 def load_background(path: str) -> Optional[pygame.Surface]:
     """Load and scale background image if it exists"""
     try:
         print(f"\nLoading background image from {path}...")
         bg = pygame.image.load(path)
-        print("✅ Background image loaded successfully")
+        print("Background image loaded successfully")
         if bg.get_size() != (config.SCREEN_WIDTH, config.SCREEN_HEIGHT):
-            print(f"⚠️ Warning: Resizing background from {bg.get_size()} to display resolution")
+            print(f"Warning: Resizing background from {bg.get_size()} to display resolution")
             bg = pygame.transform.scale(bg, (config.SCREEN_WIDTH, config.SCREEN_HEIGHT))
         return bg
     except (pygame.error, FileNotFoundError) as e:
-        print(f"⚠️ Warning: Couldn't load background image: {e}")
+        print(f"Warning: Couldn't load background image: {e}")
         return None
 
 def load_font(size: int) -> pygame.font.Font:
@@ -48,9 +48,9 @@ def load_font(size: int) -> pygame.font.Font:
         
     try:
         font = pygame.font.Font(config.FONT_PATH, size)
-        print(f"✅ Loaded font {config.FONT_PATH} at size {size}")
+        print(f"Loaded font {config.FONT_PATH} at size {size}")
     except (pygame.error, FileNotFoundError):
-        print(f"⚠️ Warning: Could not load {config.FONT_PATH}, falling back to default font")
+        print(f"Warning: Could not load {config.FONT_PATH}, falling back to default font")
         font = pygame.font.Font(None, size)
     
     _font_cache[size] = font
