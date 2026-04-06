@@ -28,13 +28,13 @@ class AudioManager:
             media.add_option(':clock-synchro=0')
             self.player.set_media(media)
             self.initialised = True
-            print("✅ Audio manager initialised successfully")
+            print("Audio manager initialised successfully")
             return True
         except ModuleNotFoundError:
-            print("❌ Error: 'python-vlc' not found. Please install it to use the audio feature.")
+            print("Error: 'python-vlc' not found. Please install it to use the audio feature.")
             return False
         except Exception as e:
-            print(f"❌ Error initialising audio. Is the VLC application installed? Details: {e}")
+            print(f"Error initialising audio. Is the VLC application installed? Details: {e}")
             self.player = None
             self.instance = None
             return False
@@ -46,10 +46,10 @@ class AudioManager:
 
         if self.player.is_playing():
             self.player.stop()
-            print("✅ Audio stream stopped")
+            print("Audio stream stopped")
         else:
             self.player.play()
-            print("✅ Audio stream started")
+            print("Audio stream started")
 
     def is_playing(self) -> bool:
         """Returns True if the audio stream is currently playing."""
@@ -67,5 +67,5 @@ class AudioManager:
         self.instance = None
 
         if self.initialised:
-            print("✅ Audio shut down cleanly")
+            print("Audio shut down cleanly")
 
