@@ -26,10 +26,10 @@ class AircraftTracker:
                 ac = Aircraft.from_dict(ac_data)
                 if ac:
                     aircraft_list.append(ac)
-            print(f"✅ Found {len(aircraft_list)} aircraft within {config.RADIUS_NM}NM range")
+            print(f"Found {len(aircraft_list)} aircraft within {config.RADIUS_NM}NM range")
             return aircraft_list
         except requests.RequestException as e:
-            print(f"❌ Error: Couldn't fetch aircraft data: {e}")
+            print(f"Error: Couldn't fetch aircraft data: {e}")
             return []
 
     def update_loop(self):
