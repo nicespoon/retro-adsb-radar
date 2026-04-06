@@ -17,9 +17,9 @@ from ui_components import RadarScope, DataTable
 def main():
     """Main application loop"""
     print("\nStarting Retro ADS-B Radar...")
-    print(f"📍 Location: {config.AREA_NAME} ({config.LAT}°, {config.LON}°)")
-    print(f"📡 Range: {config.RADIUS_NM} NM")
-    print(f"🖥️ Display: {config.SCREEN_WIDTH}x{config.SCREEN_HEIGHT} at {config.FPS} FPS")
+    print(f"Location: {config.AREA_NAME} ({config.LAT}°, {config.LON}°)")
+    print(f"Range: {config.RADIUS_NM} NM")
+    print(f"Display: {config.SCREEN_WIDTH}x{config.SCREEN_HEIGHT} at {config.FPS} FPS")
 
     # Initialisation
     pygame.display.init()
@@ -161,7 +161,7 @@ def main():
     if audio and audio.initialised:
         audio.shutdown()
 
-    print("✅ Shutting down...")
+    print("Shutting down...")
     pygame.quit()
     sys.exit()
 
