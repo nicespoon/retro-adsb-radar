@@ -8,6 +8,14 @@ BLINK_MILITARY = true
 ATC_STREAM_URL =
 AUTO_START = false
 
+# MQTT Configuration (Uncomment to enable remote mute control)
+# MQTT_BROKER = 192.168.1.100
+# MQTT_PORT = 1883
+# MQTT_USER = 
+# MQTT_PASSWORD = 
+# COMMAND_TOPIC = home/rpi-volume/rtl_airband/mute/set
+# STATE_TOPIC = home/rpi-volume/rtl_airband/mute/state
+
 [Location]
 LAT = -31.9522
 LON = 115.8614

@@ -7,7 +7,7 @@ Aircraft radar display built with Python and Pygame. Visualises real-time aircra
 - Military aircraft detection with configurable hex code prefixes and blinking effect
 - Configurable font sizes and display settings
 - Tabular display of aircraft data (callsign, altitude, speed, distance, track)
-- Live ATC audio streaming from a specified URL
+- Live ATC audio either from a local stream URL or via remote MQTT mute control
 - Retro colour palette and font
 - Default configuration is compatible with the [Hagibis Mini PC USB-C Hub](https://hagibis.com/products-p00288p1.html)
 
@@ -53,7 +53,7 @@ After configuring `config.ini`, start the radar application:
 python3 main.py
 ```
 
-To quit, press `Q` or `ESC` in the radar window. If ATC audio streaming is enabled by setting a `ATC_STREAM_URL`, press `A` to toggle audio on/off.
+To quit, press `Q` or `ESC` in the radar window. If ATC audio is enabled either by setting `ATC_STREAM_URL` or by configuring MQTT audio control, press `A` to toggle audio on/off.
 
 ## Configuration
 The application is configured via `config.ini`.
@@ -68,6 +68,14 @@ BLINK_MILITARY = true              # Toggle blinking effect for military aircraf
 [Audio]
 ATC_STREAM_URL =                   # URL of live ATC audio stream (leave blank to disable)
 AUTO_START = false                 # Start ATC stream automatically (true/false)
+
+# MQTT Configuration (Uncomment to enable remote mute control)
+# MQTT_BROKER = "192.168.1.100"    # MQTT broker host; when set with topics, MQTT mode is used instead of ATC_STREAM_URL
+# MQTT_PORT = 1883                 # MQTT broker port
+# MQTT_USER = ""                   # Optional MQTT username
+# MQTT_PASSWORD = ""               # Optional MQTT password
+# COMMAND_TOPIC = "home/rpi-volume/rtl_airband/mute/set"   # Topic used to publish mute commands
+# STATE_TOPIC = "home/rpi-volume/rtl_airband/mute/state"   # Topic subscribed to for current mute state
 
 [Location]
 LAT = -31.9522                     # Radar centre latitude
@@ -90,6 +98,8 @@ RADAR_FONT_SIZE = 28               # Font size for radar labels and callsigns
 TABLE_FONT_SIZE = 28               # Font size for the data table
 INSTRUCTION_FONT_SIZE = 28         # Font size for instruction text
 ```
+
+If `MQTT_BROKER`, `COMMAND_TOPIC`, and `STATE_TOPIC` are set, the radar uses MQTT audio control and ignores `ATC_STREAM_URL`. The UI shows `A: ATC [SYNC]` until the current mute state arrives on `STATE_TOPIC`, then updates to `ON` or `OFF` automatically.
 
 ## Pygame SDL Dependency Check and Troubleshooting
 

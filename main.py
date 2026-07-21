@@ -6,7 +6,6 @@ import pygame
 import sys
 import time
 from datetime import datetime
-from typing import Optional
 
 import config
 import utils
@@ -52,7 +51,7 @@ def main():
     table = DataTable(screen, config.SCREEN_WIDTH // 2 + 20, 80, config.SCREEN_WIDTH // 2 - 30, config.SCREEN_HEIGHT - 100)
     
     # Initialise Audio and Data Tracker
-    audio = AudioManager(config.ATC_STREAM_URL)
+    audio = AudioManager(config.ATC_STREAM_URL, mqtt_config=config.MQTT_CONFIG)
     if audio.initialise() and config.ATC_AUTO_START:
         print("Auto-starting ATC audio...")
         audio.toggle()
@@ -88,7 +87,7 @@ def main():
 
         # Instructions with clickable areas (centered under radar scope)
         quit_text = "Q/ESC: QUIT"
-        audio_text = f"A: ATC [{'ON' if audio.is_playing() else 'OFF'}]" if audio and audio.initialised else ""
+        audio_text = f"A: ATC [{audio.status_label()}]" if audio and audio.initialised else ""
 
         # Combine both texts with spacing
         instruction_text = quit_text
@@ -142,7 +141,7 @@ def main():
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 mouse_pos = pygame.mouse.get_pos()
                 # Check for clicks on instruction text areas
-                if audio and audio_rect.collidepoint(mouse_pos):
+                if audio and audio_rect and audio_rect.collidepoint(mouse_pos):
                     audio.toggle()
                 elif quit_rect.collidepoint(mouse_pos):
                     running = False

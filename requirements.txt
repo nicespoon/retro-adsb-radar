@@ -1,3 +1,4 @@
 pygame==2.6.1
+paho-mqtt==2.1.0
 python-vlc==3.0.21203
 requests==2.32.5
