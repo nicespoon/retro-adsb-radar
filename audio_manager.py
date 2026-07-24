@@ -72,11 +72,12 @@ class AudioManager:
             return False
 
         try:
-            try:
-                self.client = mqtt.Client(mqtt.CallbackAPIVersion.VERSION2)
-            except AttributeError:
-                self.client = mqtt.Client()
+            self.client = mqtt.Client(mqtt.CallbackAPIVersion.VERSION2)
+        except AttributeError:
+            print("Error: paho-mqtt v2.0.0+ is required. Please run 'pip install --upgrade paho-mqtt'")
+            return False
 
+        try:
             if self.mqtt_config.get('user'):
                 self.client.username_pw_set(
                     self.mqtt_config.get('user'),
@@ -99,26 +100,29 @@ class AudioManager:
             print(f"Error initialising MQTT audio control: {e}")
             return False
 
-    def _on_mqtt_connect(self, client, userdata, flags, reason_code, properties=None):
+    def _on_mqtt_connect(self, client, userdata, flags, reason_code, properties):
         self._mqtt_connected = True
         state_topic = self.mqtt_config.get('state_topic')
         if state_topic:
             client.subscribe(state_topic)
         print(f"MQTT audio control connected to {self.mqtt_config.get('broker')}:{self.mqtt_config.get('port')}")
 
-    def _on_mqtt_disconnect(self, client, userdata, reason_code, properties=None):
+    def _on_mqtt_disconnect(self, client, userdata, disconnect_flags, reason_code, properties):
         self._mqtt_connected = False
         print(f"MQTT audio control disconnected: {reason_code}")
 
     def _on_mqtt_message(self, client, userdata, message):
-        payload = message.payload.decode('utf-8', errors='ignore').strip().upper()
-        muted = self._payload_to_bool(payload)
-        if muted is None:
-            print(f"Ignoring unrecognised MQTT state payload: {payload}")
-            return
+        try:
+            payload = message.payload.decode('utf-8', errors='ignore').strip().upper()
+            muted = self._payload_to_bool(payload)
+            if muted is None:
+                print(f"Ignoring unrecognised MQTT state payload: {payload}")
+                return
 
-        with self._state_lock:
-            self._mqtt_muted = muted
+            with self._state_lock:
+                self._mqtt_muted = muted
+        except Exception as e:
+            print(f"MQTT Message Error: {e}")
 
     def _payload_to_bool(self, payload: str) -> Optional[bool]:
         if payload in {'ON', 'TRUE', '1', 'MUTED'}:
